@@ -2,16 +2,16 @@
 
 import arxiv
 import json
-from datetime import datetime
 
 def fetch_arxiv_papers(query="natural language processing", max_results=100):
+    client = arxiv.Client()
     search = arxiv.Search(
         query=query,
         max_results=max_results,
         sort_by=arxiv.SortCriterion.SubmittedDate
     )
     papers = []
-    for result in search.results():
+    for result in client.results(search):
         papers.append({
             "title": result.title,
             "summary": result.summary,

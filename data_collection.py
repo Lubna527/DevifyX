@@ -1,21 +1,22 @@
 # data_collection.py
-
 import arxiv
 import json
 
-def fetch_arxiv_papers(query="natural language processing", max_results=100):
+def fetch_arxiv_papers(query="natural language processing", max_results=200):
     client = arxiv.Client()
     search = arxiv.Search(
         query=query,
         max_results=max_results,
-        sort_by=arxiv.SortCriterion.SubmittedDate
+        sort_by=arxiv.SortCriterion.SubmittedDate,
+        sort_order=arxiv.SortOrder.Ascending  # older first
     )
     papers = []
     for result in client.results(search):
+        published_date = result.published.strftime("%Y-%m-%d") if result.published else None
         papers.append({
             "title": result.title,
             "summary": result.summary,
-            "published": result.published.strftime("%Y-%m-%d"),
+            "published": published_date,
             "authors": [a.name for a in result.authors]
         })
     return papers
